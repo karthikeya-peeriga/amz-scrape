@@ -228,7 +228,7 @@
     <div class="sidebar">
         <a href="#" class="navbar-brand">Ecombuddha</a>
         <a href="#"><i class="fas fa-home mr-2"></i> Dashboard</a>
-        <a href="#"><i class="fas fa-search mr-2"></i> Amazon Scraper</a>
+        <a href="#" id="amazonScraperLink"><i class="fas fa-search mr-2"></i> Amazon Scraper</a>
         <a href="#"><i class="fas fa-database mr-2"></i> Data Integration</a>
         <a href="#"><i class="fas fa-chart-line mr-2"></i> Analytics</a>
     </div>
@@ -320,6 +320,7 @@
     <script>
       document.addEventListener('DOMContentLoaded', function() {
             const scraperButton = document.getElementById('scraperButton');
+            const amazonScraperLink = document.getElementById('amazonScraperLink');
             const scraperPopup = document.getElementById('scraperPopup');
             const popupClose = document.getElementById('popupClose');
             const singleProductScrapeButton = document.getElementById("singleProductScrape");
@@ -327,8 +328,16 @@
             const asinForm = document.getElementById("asinForm");
             const bulkUploadForm = document.getElementById("bulkUploadForm");
 
-            scraperButton.addEventListener('click', function() {
+            // Function to open the scraper popup
+            function openScraperPopup() {
                 scraperPopup.style.display = 'flex'; // Show the popup
+            }
+
+            // Attach the popup opening function to both buttons
+            scraperButton.addEventListener('click', openScraperPopup);
+            amazonScraperLink.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default link behavior
+                openScraperPopup();
             });
 
             popupClose.addEventListener('click', function() {
