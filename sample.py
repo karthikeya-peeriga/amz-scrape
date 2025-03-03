@@ -34,11 +34,18 @@ def get_amazon_product(asin):
         bullet_points = [bp.get_text(strip=True) for bp in soup.select("#feature-bullets li span")]
         bullet_points = "\n".join(bullet_points)  # Convert list to string for Excel
 
+        # Selling price
         price = soup.select_one(".a-price .a-offscreen")
         price = price.get_text(strip=True) if price else "N/A"
 
-        discount_price = soup.select_one(".priceBlockStrikePriceString")
-        discount_price = discount_price.get_text(strip=True) if discount_price else "N/A"
+        # MRP (Maximum Retail Price)
+        mrp = soup.select_one(".priceBlockStrikePriceString")
+        if not mrp:  # Alternative MRP selector
+            mrp = soup.select_one(".a-text-price .a-offscreen")
+        mrp = mrp.get_text(strip=True) if mrp else "N/A"
+
+        # Discount price (same as selling price in most cases)
+        discount_price = price  # Keeping discount price same as price if not available
 
         delivery = soup.select_one("#deliveryBlockMessage span")
         delivery = delivery.get_text(strip=True) if delivery else "N/A"
@@ -51,6 +58,7 @@ def get_amazon_product(asin):
             "ASIN": asin,
             "Title": title,
             "Bullet Points": bullet_points,
+            "MRP (Original Price)": mrp,
             "Selling Price": price,
             "Discount Price": discount_price,
             "Delivery Date": delivery,
