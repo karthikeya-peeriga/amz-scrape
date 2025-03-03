@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file, redirect, url_for
+from flask import Flask, render_template, request, send_file, session
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -8,8 +8,10 @@ import re
 from datetime import datetime
 import io
 import json
+import html  # Import the html module
 
 app = Flask(__name__)
+app.secret_key = "ecombuddha_secret_key_change_in_production"  # Change this in production
 
 @app.route('/')
 def index():
@@ -244,6 +246,9 @@ def parse_delivery_date(delivery_text):
     # Return "Unknown" if we can't parse the date
     return "Unable to parse date"
 
+def remove_control_characters(s):
+    return re.sub(r'[\x00-\x1F\x7F-\x9F]', '', s)
+
 @app.route('/scrape_single_product', methods=['POST'])
 def scrape_single_product():
     if request.method == 'POST':
@@ -251,8 +256,10 @@ def scrape_single_product():
         product_data = get_amazon_product(asin)
 
         if product_data:
+            # Store product data in session
+            session['products'] = [product_data]
             # Pass product_data to the template
-            return render_template("index.html", products=[product_data]) # Changed product to products, and wrapped in a list
+            return render_template("index.html", products=[product_data])
         else:
             return "Error: Could not scrape the product."
     else:
@@ -280,7 +287,9 @@ def scrape_bulk_products():
                     if product_data:
                         products.append(product_data)
 
-                return render_template('index.html', products=products)  # Pass the list of products
+                # Store products in session
+                session['products'] = products
+                return render_template('index.html', products=products)
 
             except Exception as e:
                 print(f"Error processing file: {e}")
@@ -291,52 +300,79 @@ def scrape_bulk_products():
 @app.route('/download_excel', methods=['POST'])
 def download_excel():
     try:
-        # Get the product data from the form
-        product_data_json = request.form.get('product')
+        # Get the list of products from the session
+        products = session.get('products', [])
+        
+        if not products:
+            # If no products in session, check if any were passed in the form
+            if 'products' in request.form:
+                try:
+                    products_json = request.form.get('products')
+                    products_json = html.unescape(products_json)
+                    products_json = remove_control_characters(products_json)
+                    products = json.loads(products_json)
+                except json.JSONDecodeError as e:
+                    print(f"JSON Decode Error: {e}")
+                    return f"Error processing JSON data: {str(e)}"
+        
+        # Make sure we have a list of products, even if only one product is passed
+        if not isinstance(products, list):
+            products = [products]
+        
+        if products:
+            # Convert to DataFrame
+            df = pd.DataFrame(products)
+            # Rearrange columns in the desired order
+            column_order = [
+                "Timestamp",
+                "ASIN",
+                "Title",
+                "Description",
+                "Bullet Points",
+                "Current Price",
+                "Original Price (MRP)",
+                "Discount Percentage",
+                "Delivery Date Raw",
+                "Delivery Date Parsed",
+                "URL"
+            ]
 
-        # Parse the JSON data
-        product_data = json.loads(product_data_json)
+            # Make sure all columns in the order list exist in the DataFrame
+            # and keep any extra columns that might be in the data but not in our order list
+            existing_columns = [col for col in column_order if col in df.columns]
+            extra_columns = [col for col in df.columns if col not in column_order]
+            final_column_order = existing_columns + extra_columns
 
-        # Convert to DataFrame
-        df = pd.DataFrame([product_data])
-
-        # Rearrange columns in the desired order
-        column_order = [
-            "Timestamp",
-            "ASIN",
-            "Title",
-            "Description",
-            "Bullet Points",
-            "Current Price",
-            "Original Price (MRP)",
-            "Discount Percentage",
-            "Delivery Date Raw",
-            "Delivery Date Parsed",
-            "URL"
-        ]
-
-        # Make sure all columns in the order list exist in the DataFrame
-        # and keep any extra columns that might be in the data but not in our order list
-        existing_columns = [col for col in column_order if col in df.columns]
-        extra_columns = [col for col in df.columns if col not in column_order]
-        final_column_order = existing_columns + extra_columns
-
-        # Reorder the DataFrame columns
-        df = df[final_column_order]
+            # Reorder the DataFrame columns
+            df = df[final_column_order]
+        else:
+            # Create an empty DataFrame with the desired column order
+            df = pd.DataFrame(columns=[
+                "Timestamp",
+                "ASIN",
+                "Title",
+                "Description",
+                "Bullet Points",
+                "Current Price",
+                "Original Price (MRP)",
+                "Discount Percentage",
+                "Delivery Date Raw",
+                "Delivery Date Parsed",
+                "URL"
+            ])
 
         # Create an in-memory Excel file
         excel_buffer = io.BytesIO()
 
         # Use ExcelWriter for more control
         with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False, sheet_name='Product Data')
+             df.to_excel(writer, index=False, sheet_name='Product Data')
 
         # Important: Move pointer to beginning of buffer
         excel_buffer.seek(0)
 
         # Set the appropriate headers for file download
-        filename = f"amazon_product_{product_data['ASIN']}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
-
+        filename = f"amazon_products_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
         return send_file(
             excel_buffer,
             download_name=filename,
@@ -344,9 +380,6 @@ def download_excel():
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
 
-    except json.JSONDecodeError as e:
-        print(f"JSON decode error: {e}")
-        return f"Error: Invalid JSON data - {str(e)}"
     except Exception as e:
         import traceback
         traceback.print_exc()

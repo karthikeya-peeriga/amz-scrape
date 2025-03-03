@@ -277,15 +277,14 @@
                 <p class="card-text"><strong>Bullet Points:</strong></p>
                 <p class="card-text">{{ product["Bullet Points"]|replace('\n', '<br>')|safe }}</p>
               </div>
-
-              <form method="POST" action="/download_excel">
-                  <input type="hidden" name="product" value="{{ product|tojson }}">
-                  <button type="submit" class="download-link" id="downloadExcelBtn">Download Excel</button>
-              </form>
-
             </div>
           </div>
         {% endfor %}
+
+        <!-- Modified simpler download button for all products -->
+        <form method="POST" action="/download_excel" class="text-center mb-4">
+            <button type="submit" class="btn btn-success" id="downloadExcelBtn">Download Excel with All Products</button>
+        </form>
       {% endif %}
     </div>
 
