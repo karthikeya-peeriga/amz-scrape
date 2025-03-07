@@ -287,21 +287,21 @@
 
     <div class="content">
         <h1>Dashboard</h1>
-        
+
         <!-- Display any error messages -->
         {% if error %}
         <div class="status-message error-message">
             <strong>Error:</strong> {{ error }}
         </div>
         {% endif %}
-        
+
         <!-- Display success messages for bulk scraping -->
         {% if success_count and failed_count is defined %}
         <div class="status-message success-message">
             <strong>Bulk Scraping Results:</strong> Successfully scraped {{ success_count }} product(s). Failed to scrape {{ failed_count }} product(s).
         </div>
         {% endif %}
-        
+
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
@@ -358,7 +358,7 @@
                     <h6>Technical Details:</h6>
                     <ul>
                     {% for key, value in product.items() %}
-                        {% if key.startswith('Tech_') or key.startswith('Detail_') or key.startswith('Prod_') %}
+                        {% if key.startswith('Tech_') %}
                             <li><strong>{{ key[5:].replace('_', ' ') }}:</strong> {{ value }}</li>
                         {% endif %}
                     {% endfor %}

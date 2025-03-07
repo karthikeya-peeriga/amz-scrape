@@ -54,3 +54,56 @@
 2025-03-07 17:52:52,363 - INFO - Scraping product with ASIN: B0CGW18S6Y
 2025-03-07 17:52:59,584 - INFO - Extracted 3 technical details
 2025-03-07 17:52:59,586 - INFO - 127.0.0.1 - - [07/Mar/2025 17:52:59] "POST /scrape_single_product HTTP/1.1" 200 -
+2025-03-07 17:55:19,130 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.6:5000
+2025-03-07 17:55:19,130 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-07 17:55:19,134 - INFO -  * Restarting with stat
+2025-03-07 17:55:19,622 - WARNING -  * Debugger is active!
+2025-03-07 17:55:19,633 - INFO -  * Debugger PIN: 999-601-361
+2025-03-07 17:55:21,544 - INFO - 127.0.0.1 - - [07/Mar/2025 17:55:21] "GET / HTTP/1.1" 200 -
+2025-03-07 17:55:24,651 - INFO - Scrape request for ASIN: B0CGW18S6Y
+2025-03-07 17:55:24,651 - INFO - Scraping product with ASIN: B0CGW18S6Y
+2025-03-07 17:55:30,138 - INFO - Extracted 3 technical details
+2025-03-07 17:55:30,139 - INFO - 127.0.0.1 - - [07/Mar/2025 17:55:30] "POST /scrape_single_product HTTP/1.1" 200 -
+2025-03-07 17:58:15,368 - INFO -  * Detected change in 'C:\\Users\\kblac\\Desktop\\amz-scrape\\app.py', reloading
+2025-03-07 17:58:15,449 - INFO -  * Restarting with stat
+2025-03-07 17:58:15,976 - WARNING -  * Debugger is active!
+2025-03-07 17:58:15,987 - INFO -  * Debugger PIN: 999-601-361
+2025-03-07 17:59:14,756 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.6:5000
+2025-03-07 17:59:14,756 - INFO - [33mPress CTRL+C to quit[0m
+2025-03-07 17:59:14,757 - INFO -  * Restarting with stat
+2025-03-07 17:59:15,287 - WARNING -  * Debugger is active!
+2025-03-07 17:59:15,289 - INFO -  * Debugger PIN: 999-601-361
+2025-03-07 17:59:15,975 - INFO - 127.0.0.1 - - [07/Mar/2025 17:59:15] "GET / HTTP/1.1" 200 -
+2025-03-07 17:59:19,057 - INFO - Scrape request for ASIN: B0CGW18S6Y
+2025-03-07 17:59:19,057 - INFO - Scraping product with ASIN: B0CGW18S6Y
+2025-03-07 17:59:21,836 - WARNING - CAPTCHA detected or service unavailable (503). Attempt 1/3
+2025-03-07 17:59:34,598 - WARNING - CAPTCHA detected or service unavailable (503). Attempt 2/3
+2025-03-07 17:59:48,730 - WARNING - CAPTCHA detected or service unavailable (503). Attempt 3/3
+2025-03-07 17:59:58,741 - ERROR - Failed to retrieve product page for ASIN: B0CGW18S6Y
+2025-03-07 17:59:58,742 - INFO - 127.0.0.1 - - [07/Mar/2025 17:59:58] "POST /scrape_single_product HTTP/1.1" 200 -
+2025-03-07 18:00:05,210 - INFO - Scrape request for ASIN: B0CGW18S6Y
+2025-03-07 18:00:05,211 - INFO - Scraping product with ASIN: B0CGW18S6Y
+2025-03-07 18:00:07,502 - WARNING - CAPTCHA detected or service unavailable (503). Attempt 1/3
+2025-03-07 18:00:08,899 - INFO - Scrape request for ASIN: B0CGW18S6Y
+2025-03-07 18:00:08,899 - INFO - Scraping product with ASIN: B0CGW18S6Y
+2025-03-07 18:00:11,962 - WARNING - CAPTCHA detected or service unavailable (503). Attempt 1/3
+2025-03-07 18:00:24,475 - INFO - Extracted 3 technical details
+2025-03-07 18:00:24,475 - INFO - 127.0.0.1 - - [07/Mar/2025 18:00:24] "POST /scrape_single_product HTTP/1.1" 200 -
+2025-03-07 18:00:27,876 - INFO - Extracted 3 technical details
+2025-03-07 18:00:27,876 - INFO - 127.0.0.1 - - [07/Mar/2025 18:00:27] "POST /scrape_single_product HTTP/1.1" 200 -
+2025-03-07 18:00:48,636 - INFO - Technical details found for ASIN B0CGW18S6Y: ['Tech_Defective_Item', 'Tech_Physical_DamageWrong_and_Missing_Item', 'Tech_Replacement_Reason']
+2025-03-07 18:00:48,827 - INFO - 127.0.0.1 - - [07/Mar/2025 18:00:48] "POST /download_excel HTTP/1.1" 200 -
+2025-03-07 18:02:22,853 - INFO -  * Detected change in 'C:\\Users\\kblac\\Desktop\\amz-scrape\\sample2.py', reloading
+2025-03-07 18:02:22,985 - INFO -  * Restarting with stat
+2025-03-07 18:02:23,498 - WARNING -  * Debugger is active!
+2025-03-07 18:02:23,505 - INFO -  * Debugger PIN: 999-601-361
+2025-03-07 18:02:43,631 - INFO -  * Detected change in 'C:\\Users\\kblac\\Desktop\\amz-scrape\\sample2.py', reloading
+2025-03-07 18:02:43,705 - INFO -  * Restarting with stat
+2025-03-07 18:02:44,248 - WARNING -  * Debugger is active!
+2025-03-07 18:02:44,248 - INFO -  * Debugger PIN: 999-601-361
