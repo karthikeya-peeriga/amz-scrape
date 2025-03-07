@@ -1,0 +1,12 @@
+2025-03-07 17:28:55,027 - INFO - Scraping product with ASIN: B0CGW18S6Y
+2025-03-07 17:28:58,601 - WARNING - CAPTCHA detected or service unavailable (503). Attempt 1/3
+2025-03-07 17:29:14,702 - INFO - Data saved to amazon_products.xlsx
+2025-03-07 17:29:14,702 - INFO - Successfully scraped ASIN: B0CGW18S6Y
+2025-03-07 17:29:14,702 - INFO - Waiting 6.82 seconds before next request
+2025-03-07 17:29:21,523 - INFO - Scraping product with ASIN: B09G9D8KRQ
+2025-03-07 17:29:24,289 - WARNING - CAPTCHA detected or service unavailable (503). Attempt 1/3
+2025-03-07 17:29:37,938 - WARNING - CAPTCHA detected or service unavailable (503). Attempt 2/3
+2025-03-07 17:29:51,797 - WARNING - CAPTCHA detected or service unavailable (503). Attempt 3/3
+2025-03-07 17:30:01,802 - ERROR - Failed to retrieve product page for ASIN: B09G9D8KRQ
+2025-03-07 17:30:01,802 - ERROR - Failed to scrape ASIN: B09G9D8KRQ
+2025-03-07 17:30:01,802 - INFO - Scraping complete. Successful: 1, Failed: 1

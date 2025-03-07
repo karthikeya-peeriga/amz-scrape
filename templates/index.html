@@ -222,6 +222,58 @@
             margin-top: 10px;
             text-align: left;
         }
+
+        /* Status messages */
+        .status-message {
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info-message {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        /* Loading indicator */
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        /* Technical Details */
+        .tech-details {
+            margin-top: 15px;
+        }
+
+        .tech-details h6 {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .tech-details ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tech-details li {
+            margin-bottom: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -235,6 +287,21 @@
 
     <div class="content">
         <h1>Dashboard</h1>
+        
+        <!-- Display any error messages -->
+        {% if error %}
+        <div class="status-message error-message">
+            <strong>Error:</strong> {{ error }}
+        </div>
+        {% endif %}
+        
+        <!-- Display success messages for bulk scraping -->
+        {% if success_count and failed_count is defined %}
+        <div class="status-message success-message">
+            <strong>Bulk Scraping Results:</strong> Successfully scraped {{ success_count }} product(s). Failed to scrape {{ failed_count }} product(s).
+        </div>
+        {% endif %}
+        
         <div class="row">
             <div class="col-md-6">
                 <div class="card">
@@ -256,7 +323,15 @@
             </div>
         </div>
 
-      <!-- Product Data Card(s) - modified to handle multiple products -->
+        <!-- Loading indicator -->
+        <div class="loading-indicator" id="loadingIndicator">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <p class="mt-2">Scraping product data... This may take a few moments.</p>
+        </div>
+
+      <!-- Product Data Card(s) -->
       {% if products %}
         {% for product in products %}
           <div class="card" id="productCard">
@@ -277,12 +352,25 @@
                 <p class="card-text"><strong>Bullet Points:</strong></p>
                 <p class="card-text">{{ product["Bullet Points"]|replace('\n', '<br>')|safe }}</p>
               </div>
+
+                <!-- Technical Details -->
+                <div class="tech-details">
+                    <h6>Technical Details:</h6>
+                    <ul>
+                    {% for key, value in product.items() %}
+                        {% if key.startswith('Tech_') or key.startswith('Detail_') or key.startswith('Prod_') %}
+                            <li><strong>{{ key[5:].replace('_', ' ') }}:</strong> {{ value }}</li>
+                        {% endif %}
+                    {% endfor %}
+                    </ul>
+                </div>
             </div>
           </div>
         {% endfor %}
 
-        <!-- Modified simpler download button for all products -->
+        <!-- Download button for products -->
         <form method="POST" action="/download_excel" class="text-center mb-4">
+            <input type="hidden" name="products" value="{{ products | tojson | escape }}" />
             <button type="submit" class="btn btn-success" id="downloadExcelBtn">Download Excel with All Products</button>
         </form>
       {% endif %}
@@ -327,6 +415,7 @@
             const bulkProductScrapeButton = document.getElementById("bulkProductScrape");
             const asinForm = document.getElementById("asinForm");
             const bulkUploadForm = document.getElementById("bulkUploadForm");
+            const loadingIndicator = document.getElementById("loadingIndicator");
 
             // Function to open the scraper popup
             function openScraperPopup() {
@@ -361,12 +450,23 @@
                 singleProductScrapeButton.classList.add("hidden");
             });
 
-             function resetPopup() {
+            function resetPopup() {
                 asinForm.style.display = "none";
                 bulkUploadForm.style.display = "none";
                 bulkProductScrapeButton.classList.remove("hidden");
                 singleProductScrapeButton.classList.remove("hidden");
             }
+
+            // Show loading indicator when forms are submitted
+            asinForm.addEventListener('submit', function() {
+                scraperPopup.style.display = 'none';
+                loadingIndicator.style.display = 'block';
+            });
+
+            bulkUploadForm.addEventListener('submit', function() {
+                scraperPopup.style.display = 'none';
+                loadingIndicator.style.display = 'block';
+            });
 
             // Optional: Close the popup if the user clicks outside the popup content
             window.addEventListener('click', function(event) {
@@ -374,11 +474,6 @@
                     scraperPopup.style.display = 'none';
                     resetPopup();
                 }
-            });
-
-            popupClose.addEventListener('click', function() {
-                scraperPopup.style.display = 'none'; // Hide the popup
-                resetPopup();
             });
         });
     </script>
